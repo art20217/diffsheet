@@ -1,0 +1,2 @@
+/* index.html 引用此檔；實際樣式目前皆寫在 index.html 的 <style> 內。
+   缺少此檔會讓 Vite build 解析失敗，故保留空檔案。 */
