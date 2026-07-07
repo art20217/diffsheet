@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiffSheet Pro - 專業比對工具</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #020617;
+            color: #f1f5f9;
+            scroll-behavior: smooth;
+        }
+        /* 捲軸美化與行為鎖定 */
+        .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: #4f46e5 #020617;
+            /* 關鍵：鎖定捲動事件在容器內，不傳遞到 parent (body) */
+            overscroll-behavior: contain;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #020617;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 10px;
+            border: 2px solid #020617;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #4f46e5;
+        }
+
+        /* 強制行高鎖定系統 */
+        .strict-row {
+            height: 40px !important;
+            min-height: 40px !important;
+            max-height: 40px !important;
+            box-sizing: border-box !important;
+        }
+        
+        /* 表格背景核心系統 - 強制同步所有 td（包含 sticky 元素） */
+        tr td { 
+            background-color: #0f172a; 
+            border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+            transition: none !important; /* 徹底消除延遲 */
+        }
+        
+        /* 狀態背景：使用較高的權重確保同步 */
+        tr.is-diff-red td { background-color: #450a0a !important; }
+        tr.is-diff-blue td { background-color: #1e1b4b !important; }
+        
+        /* 排除狀態：權重高於差異背景 */
+        tr.is-excluded td { background-color: #020617 !important; }
+        
+        /* 懸停與同步亮顯：最高權重 */
+        tr:hover td { background-color: #1e293b !important; }
+        tr.is-sync-hover td { background-color: #312e81 !important; }
+
+        /* 固定欄位（勾選欄）必須與所屬 td 保持一致背景以防止捲動穿透 */
+        .sticky-cell {
+            position: sticky !important;
+            z-index: 20;
+            box-shadow: none !important;
+            border-bottom: 1px solid rgba(30, 41, 59, 0.5) !important;
+            border-left: none !important;
+            border-right: none !important;
+        }
+        
+        /* 移除標頭固定欄位的框線 */
+        .sticky-header {
+            position: sticky !important;
+            z-index: 40;
+            background-color: #1e293b !important; /* slate-800 */
+            box-shadow: none !important;
+            border: none !important;
+        }
+
+        /* 勾選框在排除狀態下的外觀保持清晰 */
+        tr.is-excluded td input[type="checkbox"] {
+            opacity: 1;
+        }
+
+        /* 對齊動畫回饋 */
+        @keyframes row-pulse {
+            0% { background-color: rgba(79, 70, 229, 0.8) !important; }
+            100% { /* 由 class 自動恢復 */ }
+        }
+        .animate-pulse-sync td {
+            animation: row-pulse 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="bg-slate-950 text-slate-200">
+    <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
